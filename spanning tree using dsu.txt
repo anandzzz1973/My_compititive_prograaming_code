@@ -1,0 +1,91 @@
+ /*Always success does not build on success,success build on failure*/
+#include <bits/stdc++.h>
+#define ll          long long
+#define pb          push_back
+#define vec         vector<int>
+#define map         map<int,int>
+#define scn(t)      scanf("%d",&t);
+#define lscn(t)      scanf("%lld",&t);
+#define mod         1000000007
+#define rep(i,a,b)  for(int i=a;i<b;i++)
+#define endl        "\n"
+using namespace std;
+const ll N=1e6+5;
+struct util
+{
+    int u,v,wt,ind;
+};
+util arr[N];
+bool p=1;
+int par[N];
+bool comp(util a,util b)
+{
+    return a.wt<b.wt;
+}
+int find(int node)
+{
+    par[node]=(par[node]==node)?node:find(par[node]);
+    return par[node];
+}
+void merge(int a,int b)
+{
+    int p1=find(a);
+    int p2=find(b);
+    
+    if(p1==p2)
+    {
+        p=0;
+        return;
+    }
+    else
+    {
+        par[p1]=p2;
+    }
+}
+int main()
+{ 
+    int n;
+    scn(n);
+    
+    int e;
+    scn(e);
+    
+    for(int i=1;i<=n;i++)
+    par[i]=i;
+    
+    for(int i=0;i<e;i++)
+    {
+        int a,b,c;
+        scn(a);
+        scn(b);
+        scn(c);
+        
+        arr[i].u=a;
+        arr[i].v=b;
+        arr[i].wt=c;
+        arr[i].ind=i+1;
+    }
+    
+    sort(arr,arr+e,comp);
+    set<int> s;
+    int ans=0;
+    int uts[n+1]={0};
+    vec v[N];
+    for(int i=0;i<e;i++)
+    {
+        p=1;
+        merge(arr[i].u,arr[i].v);
+        
+        if(p)
+        {
+            ans+=arr[i].wt;
+            s.insert(arr[i].ind);
+            v[arr[i].u].pb(arr[i].wt);
+            v[arr[i].v].pb(arr[i].wt);
+        }
+    }
+    
+    cout<<ans;
+    
+    
+}

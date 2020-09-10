@@ -1,0 +1,107 @@
+       /*Always success does not build on success,success build on failure and hardwork*/
+#include <bits/stdc++.h>
+#define ll          long long
+#define pb          push_back
+#define vec         vector<int>
+#define map         map<int,int>
+#define scn(t)      scanf("%d",&t);
+#define lscn(t)      scanf("%lld",&t);
+#define mod         1000000007
+#define rep(i,a,b)  for(int i=a;i<b;i++)
+#define endl        "\n"
+using namespace std;
+const int N=1e5+5;
+int k,ans=0;
+struct trie
+{
+       trie* a[26];
+       int cnt;
+       trie()
+       {
+              for(int i=0;i<26;i++)
+              a[i]=nullptr;
+
+              cnt=0;
+       }
+};
+void insert(trie* root,string &s,int lev)
+{
+       if(lev==(int)s.length())
+       return;
+
+       int b=s[lev]-'A';
+
+       if(root->a[b]==nullptr)
+       root->a[b]=new trie();
+
+       root->a[b]->cnt+=1;
+
+       insert(root->a[b],s,lev+1);
+}
+int dfs(trie* root,int level)
+{
+       int group_formed=0;
+
+       for(int i=0;i<26;i++)
+       {
+              if(root->a[i]!=NULL)
+              {
+                     group_formed+=dfs(root->a[i],level+1);
+              }
+       }
+
+       int available = root->cnt-group_formed*k;
+
+       int no_of_group_formed=available/k;
+
+       ans=ans+no_of_group_formed*level;
+
+       group_formed+=no_of_group_formed;
+
+       return group_formed;
+
+}
+void del(trie *root)
+{
+	rep(i,0,26)
+	if(root->a[i]!=nullptr)
+	del(root->a[i]);
+
+	delete(root);
+}
+int main()
+{
+      int t;
+      scn(t);
+
+      int z=0;
+
+      while(t--)
+      {
+             z++;
+             int n;
+             scn(n);
+             scn(k);
+
+             trie* root = new trie();
+
+             for(int i=0;i<n;i++)
+             {
+                    string s;
+                    cin>>s;
+
+                    insert(root,s,0);
+             }
+
+             ans=0;
+
+             int k=dfs(root,0);
+
+             printf("Case #%d: %lld\n",z,ans);
+
+             del(root);
+      }
+}
+
+//this is a solution for the question link
+//https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ffc7/00000000001d3ff3

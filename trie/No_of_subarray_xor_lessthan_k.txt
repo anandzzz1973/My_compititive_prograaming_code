@@ -1,0 +1,127 @@
+       /*Always success does not build on success,success build on failure and hardwork*/
+#include <bits/stdc++.h>
+#define ll          long long
+#define pb          push_back
+#define vec         vector<int>
+#define map         map<int,int>
+#define scn(t)      scanf("%d",&t);
+#define lscn(t)      scanf("%lld",&t);
+#define mod         1000000007
+#define rep(i,a,b)  for(int i=a;i<b;i++)
+#define endl        "\n"
+using namespace std;
+const int N=1e5+5;
+int k,ans=0;
+struct trie
+{
+       trie* a[2];
+       int cnt;
+       trie()
+       {
+              for(int i=0;i<2;i++)
+              a[i]=nullptr;
+
+              cnt=0;
+       }
+};
+void insert(trie* root,int lev,int num)
+{
+       if(lev==-1)
+       return;
+
+       bool b=(num&(1<<lev));
+
+       if(root->a[b]==nullptr)
+       root->a[b]=new trie();
+
+       root->a[b]->cnt+=1;
+
+       insert(root->a[b],lev-1,num);
+}
+void del(trie* root,int lev,int num)
+{
+       if(lev==-1)
+       return;
+
+       bool b=(num&(1<<lev));
+
+       del(root->a[b],lev-1,num);
+
+       root->a[b]->cnt--;
+
+       if(root->a[b]->cnt==0)
+       {
+              delete(root->a[b]);
+              root->a[b]=nullptr;
+       }
+      
+}
+int query(trie* root,int lev,int num,int check)
+{
+       if(lev==-1 || root==nullptr)
+       return 0;
+
+       bool b=(num&(1<<lev));
+       bool req=(check&(1<<lev));
+
+       int hell=0;
+
+       if(req==0)  // case one when req bit is not set then we have no option other than go with b bit
+       {
+              hell+=query(root->a[b],lev-1,num,check);
+       }
+       else   //case 2 and 3 are here here 
+       {
+              if(root->a[b]!=nullptr)
+              hell+=root->a[b]->cnt;
+
+              hell+=query(root->a[!b],lev-1,num,check);
+       }
+
+       return hell;      
+}
+int main()
+{
+       int n;
+       scn(n);
+
+       trie * root = new trie();
+       int abc=0;
+
+       while(n--)
+       {
+              int c;
+              scn(c);
+
+              if(c==1)
+              {
+                     int x;
+                     scn(x);
+
+                     insert(root,30,x);
+              }
+              else if(c==2)
+              {
+                     int x;
+                     scn(x);
+
+                     del(root,30,x);
+              }
+              else
+              {
+                     int p,l;
+                     scn(p);
+                     scn(l);
+
+                     ans=0;
+
+                     ans=query(root,30,p,l);
+
+                     cout<<ans<<endl;
+              }
+       }
+}
+
+
+//this is the solution of the question 
+//https://codeforces.com/contest/817/problem/E

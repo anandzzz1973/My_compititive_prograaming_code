@@ -1,0 +1,65 @@
+ // this will calculate eular totent function of a number.
+long long prime[1000001]={0};
+    
+    for(int i=2;i<1000001;i++)
+    prime[i]=1;
+    
+    for(int i=2;i<1000001;i++)
+    {
+        if(prime[i]==1)
+        {
+            for(int j=2;j*i<1000001;j++)
+            if(prime[i*j]==1)
+            prime[i*j]=0;
+        }
+    }
+    
+    long long factor[1000001]={0};
+    
+    for(int i=1;i<1000001;i++)
+      factor[i]=1;
+      
+     for(int i=2;i<1000001;i++)
+    {
+        if(brr[i]==1)
+        {
+            for(int j=1;j*i<1000001;j++)
+            if(factor[i*j]==1)
+            factor[i*j]=i;
+        }
+    }  
+    
+    long long etf[1000001]={0};
+    etf[1]=1;
+    for(int i=2;i<1000001;i++)
+    {
+        if(prime[i]==1)
+        etf[i]=i-1;
+        else
+        {
+            int ans=i,a,b,c;
+            a=i;
+            b=factor[i];
+            while(a!=1)
+            {
+                if(b==factor[a/b])
+                {   a=a/b;
+                    continue;
+                }
+                else
+                {
+                    ans=ans/b;
+                    ans=ans*(b-1);
+                    a=a/b;
+                    b=factor[a];
+                }
+                etf[i]=ans;
+            }
+        }
+    }
+ 
+    for(ll i=1;i<1000001;i++)
+    {
+       etf[i]+=etf[i-1];
+    }
+ 

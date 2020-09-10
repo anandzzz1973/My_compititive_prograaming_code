@@ -1,0 +1,100 @@
+ /*Always success does not build on success,success build on failure and hardwork*/
+#include <bits/stdc++.h>
+#define ll          long long
+#define pb          push_back
+#define vec         vector<ll>
+#define map         map<ll,ll>
+#define scn(t)      scanf("%d",&t);
+#define lscn(t)      scanf("%lld",&t);
+#define mod         1000000007
+#define rep(i,a,b)  for(ll i=a;i<b;i++)
+#define endl        "\n"
+using namespace std;
+const ll N=1e5+5;
+ll ans=0;
+struct trie{
+     
+     trie * a[2];
+
+     trie()
+     {
+         a[0]=a[1]=NULL;
+     }
+};
+void insert(trie* root,ll num,ll lev)
+{
+    if(lev==-1)
+    return ;
+
+    bool b=(num&((ll)1<<lev));
+
+    if((*root).a[b]==NULL)
+    (*root).a[b]=new trie();
+
+    insert((*root).a[b],num,lev-1);
+}
+void query(trie* root,ll num,ll lev)
+{
+    if(lev==-1)
+    return ;
+
+    bool b=(num&((ll)1<<lev));
+
+    if((*root).a[b]==NULL)
+    {
+        ans=ans+(1<<lev);
+        if(b)
+        b=0;
+        else
+        b=1;
+        query((*root).a[b],num,lev-1);
+    }
+    else
+    {
+        query((*root).a[b],num,lev-1);
+    }
+}
+int main()
+{
+      trie* root = new trie();
+
+      insert(root,0,30);
+
+      ll n;
+      lscn(n);
+
+      ll z=0;
+
+      while(n--)
+      {
+          ll type;
+          lscn(type);
+
+          if(type==1)
+          {
+              ll k;
+              lscn(k);
+
+              k=k^z;
+
+              insert(root,k,30);
+          }
+          else if(type==2)
+          {
+              ll k;
+              lscn(k);
+
+              z=z^k;
+          }
+          else
+          {
+              query(root,z,30);
+
+              cout<<ans<<endl;
+              ans=0;
+          }
+      }
+}
+
+//this is solution for the prolem link below
+//https://www.hackerearth.com/practice/data-structures/advanced-data-structures/trie-keyword-tree/practice-problems/algorithm/xor-and-insert-92b9b529/

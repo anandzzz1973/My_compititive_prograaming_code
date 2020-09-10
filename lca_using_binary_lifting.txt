@@ -1,0 +1,156 @@
+//problem link:-https://www.codechef.com/ENOC2019/problems/ENOC1
+#include<bits/stdc++.h>
+#define ll long long 
+#define scn(n) scanf("%d",&n)
+#define lscn(n) scanf("%lld",&n)
+#define lpri(n) printf("%lld",n)
+#define pri(n) printf("%d",n)
+#define pln() printf("\n")
+#define priln(n) printf("%d\n",n)
+#define lpriln(n) printf("%lld\n",n)
+#define rep(i,init,n) for(int i=init;i<n;i++)
+#define pb push_back     
+#define mp make_pair
+#define F first
+#define S second
+#define gcd __gcd
+#define inf INT_MAX
+#define ninf INT_MIN
+using namespace std;
+const ll mod=1e9+7;         
+const int N=1e5+4;
+
+int intime[N],outtime[N],tim,l;
+
+vector<int> v[N];
+
+int up[N][24];      //up[i][j] represents the 2^j th parent of node i.
+
+int n;
+
+void dfs1(int node,int par)
+{
+	intime[node]=tim++;
+	
+	up[node][0]=par;
+	
+	for(int i=1;i<=l;i++)
+	{
+		up[node][i]=up[up[node][i-1]][i-1]; //using 2^j=2^(j-1)+2^(j-1), up[node][i-1] being the 2^(i-1) parent of th current node
+	}
+	
+	for(auto it:v[node])  //note: we can also write for(int it:v[node])
+	if(it!=par)
+	dfs1(it,node);
+	
+	outtime[node]=tim++;
+}
+
+void preprocces()
+{
+	tim=1;
+	
+	l=ceil(log2(n))+1;
+	
+	dfs1(1,1);
+}
+
+bool is_ancestor(int u,int v)
+{
+	return intime[u]<intime[v]&&outtime[u]>outtime[v];
+}
+
+int lca(int u,int v)
+{
+	if(is_ancestor(u,v))
+	return u;
+	if(is_ancestor(v,u))
+	return v;
+	
+	if(u==v)
+	return u;
+	
+	int cnode=u;
+	
+	for(int i=l;i>=0;i--)
+	{
+		int curp=up[cnode][i];
+		
+		if(!is_ancestor(curp,v))
+		cnode=up[cnode][i];
+	}
+	
+	return up[cnode][0];
+}
+
+int val[N];
+
+void init()
+{
+    memset(up,0,sizeof(up));
+    
+    rep(i,1,N)
+    {
+        v[i].clear();
+    }
+}
+
+void dfs(int node,int par)
+{
+    for(int it:v[node])
+    if(it!=par)
+    {
+        val[it]^=val[node];
+        
+        dfs(it,node);
+    }
+}
+
+int main()                  
+{
+    int t;
+    
+    scn(t);
+    
+    while(t--)
+    {
+        init();
+        
+        int q;
+        
+        scn(n);scn(q);
+        
+        int orig[n+4];
+        
+        rep(i,1,n+1)
+        {
+            scn(val[i]);
+            
+            orig[i]=val[i];
+        }
+        
+        rep(i,0,n-1)
+        {
+            int a,b;
+            
+            scn(a);scn(b);
+            
+            v[a].pb(b);
+            
+            v[b].pb(a);
+        }
+        
+        dfs(1,-1);
+        
+        preprocces();
+        
+        while(q--)
+        {
+            int x,y;
+            
+            scn(x); scn(y);
+            
+            int here=val[x]^val[y];
+            
+            int anc=lca(x,y);
+    

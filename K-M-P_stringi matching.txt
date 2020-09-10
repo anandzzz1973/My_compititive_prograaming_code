@@ -1,0 +1,46 @@
+string s1,s2;
+
+    cin>>s1>>s2;
+
+    int m,n;
+    m=s1.length();
+    n=s2.length();
+
+    int pre[m];
+
+    pre[0]=0;
+
+    for(int i=1;i<m;i++)
+    {
+           int j=pre[i-1];
+
+           while(j>0 && s1[i]!=s1[j])
+           j=pre[j-1];
+
+           if(s1[i]==s1[j])
+           {
+                  j++;
+           }
+
+           pre[i]=j;
+    }
+
+    int count=0;
+
+    int i=0,j=0;
+
+    while(i<n)
+    {
+           if(s1[j]==s2[i])
+           i++,j++;
+
+           if(j==m)
+           count++,j=pre[j-1];
+           else if(i<n && s1[j]!=s2[i])
+           {
+                  if(j!=0)
+                  j=pre[j-1];
+                  else
+                  i++;
+           }
+    }

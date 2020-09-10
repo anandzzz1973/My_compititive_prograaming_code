@@ -1,0 +1,37 @@
+ll fact[100005];
+ll invfact[100005];
+ll power(ll x,ll y)
+{
+    if(y==0)
+    return 1;
+    
+    if(y%2==0)
+    return power((x*x)%mod,y/2)%mod;
+    else
+    return (x*power((x*x)%mod,y/2))%mod;
+}
+
+
+ll ncr(ll n,ll r)
+{
+    ll ans=1;
+    ans=(ans*fact[n])%mod;
+    ans=(ans*invfact[r])%mod;
+    ans=(ans*invfact[n-r])%mod;
+    
+    return ans;
+}
+
+
+long long prime[100000]={0};
+    
+    for(int i=0;i<100000;i++)
+    prime[i]=1;
+    
+    for(int i=2;i<100000;i++)
+    {
+        if(prime[i]==1)
+        for(int j=2;j*i<100000;j++)
+        if(prime[i*j]==1)
+        prime[i*j]=0;
+    }

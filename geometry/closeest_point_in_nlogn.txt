@@ -1,0 +1,81 @@
+       /*Always success does not build on success,success build on failure and hardwork*/
+#include <bits/stdc++.h>
+#define ll          long long
+#define pb          push_back
+#define vec         vector<int>
+// #define map         map<int,int>
+#define scn(t)      scanf("%d",&t);
+#define lscn(t)      scanf("%lld",&t);
+#define mod         1000000007
+#define rep(i,a,b)  for(int i=a;i<b;i++)
+#define endl        "\n"
+using namespace std;
+const int N=1e5+5;
+pair<long long ,long long> p1,p2;
+long double best=10e15;
+bool comp(pair<long long,long long> a,pair<long long,long long> b)
+{
+	return a.first<b.first;
+}
+void closest_distace(vector<pair<long long,long long>> point,long long n)
+{
+	sort(point.begin(),point.end(),comp);
+	
+	set<pair<long long,long long>> s;
+	long long left=0;
+	s.insert(make_pair(point[0].second,point[0].first));
+
+	for(long long i=1;i<n;i++)
+	{
+		while(point[i].first-point[left].first>best)
+		{
+			s.erase(make_pair(point[left].second,point[left].first));
+			left++;
+		}
+
+		for(auto it = s.lower_bound(make_pair(point[i].second-best,point[i].first-best));it!=s.end() && point[i].second+best>=(*it).first;it++)
+		{
+			long double ans=sqrtl(pow(point[i].first-(*it).second,2.0)+pow(point[i].second-(*it).first,2.0));
+
+			if(ans<best)
+			{
+				best=ans;
+				p1.first=(*it).second;
+				p1.second=(*it).first;
+
+				p2.first=point[i].first;
+				p2.second=point[i].second;
+			}
+		}
+
+		s.insert(make_pair(point[i].second,point[i].first));
+	}
+
+	return ;
+}
+int main()
+{
+	long long n;
+	lscn(n);
+
+	vector<pair<long long,long long>> point;
+    map<pair<long long, long long>,long long> mp;
+
+	for(long long i=0;i<n;i++)
+	{
+		ll x,y;
+		lscn(x);
+		lscn(y);
+        point.pb({x,y});
+        mp[{x,y}]=i;
+	}
+
+	closest_distace(point,n);
+    cout<<min(mp[p1],mp[p2])<<" "<<max(mp[p1],mp[p2])<<" ";
+	cout<<fixed<<setprecision(6)<<best;
+}
+
+
+
+// problem link 
+https://www.spoj.com/problems/CLOPPAIR/#:~:text=You%20are%20given%20N%20points,pair%20with%20the%20smallest%20distance

@@ -1,0 +1,6 @@
+question on stack 
+
+1st -  https://www.hackerearth.com/practice/data-structures/stacks/basics-of-stacks/practice-problems/algorithm/little-shino-and-pairs/
+
+2nd - 
+https://www.hackerearth.com/practice/data-structures/stacks/basics-of-stacks/practice-problems/algorithm/feel-taller/description/
