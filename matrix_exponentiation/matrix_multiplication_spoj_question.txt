@@ -1,0 +1,176 @@
+#####    https://www.spoj.com/problems/SPP/
+
+###############################################################
+//Think Less do more:-
+#include <bits/stdc++.h>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp> 
+#define ll          long long
+#define pb          push_back
+#define setbit(x)   __builtin_popcount(x)
+#define scn(t)      scanf("%d",&t);
+#define lscn(t)      scanf("%lld",&t);
+#define rep(i,a,b)  for(int i=a;i<b;i++)
+#define lrep(i,a,b) for(long long i=a;i<b;i++)
+// using namespace __gnu_pbds;
+using namespace std;
+// const ll N=1e7+5;
+ll mod=1000000000;
+// typedef tree<int, null_type, less<int>, rb_tree_tag, 
+//      tree_order_statistics_node_update> pbds;
+//
+void ap()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+ 
+    #ifndef ONLINE_JUDGE
+      freopen("input.txt","r",stdin);
+      freopen("output.txt","w",stdout);
+  #endif
+}
+const int N=16;
+struct matrix
+{
+    ll mat[N][N];
+    void null()
+    {
+        memset(mat,0,sizeof(mat));
+    }
+    void identity()
+    {
+        null();
+        rep(i,0,N)
+        mat[i][i]=1;
+    }
+    matrix operator *(const matrix &mat1)
+    {
+        matrix res;
+        rep(i,0,N)
+        {
+            rep(j,0,N)
+            {
+                res.mat[i][j]=0;
+                rep(k,0,N)
+                res.mat[i][j]=(res.mat[i][j]+(mat[i][k]*mat1.mat[k][j])%mod)%mod;
+            }
+        }
+        return res;
+    }
+};
+matrix mat_exp(ll n,matrix a)
+{
+    matrix res;
+    res.identity();
+    while(n)
+    {
+        if(n&(ll)1)
+        res=res*a;
+        a=a*a;
+        n>>=(ll)1;
+    }
+    return res;
+}
+int main()
+{
+    // ap();
+ 
+    int t;
+    cin>>t;
+ 
+    while(t--)
+    {
+        ll k;
+        cin>>k;
+ 
+        ll first[k],second[k];
+ 
+        ll sum=0;
+ 
+        for(ll i=0;i<k;i++)
+        {
+            cin>>first[i];
+            sum=sum+first[i];
+        }
+ 
+        for(ll i=0;i<k;i++)
+        cin>>second[i];
+ 
+        ll m;
+        cin>>m;
+ 
+        ll n;
+        lscn(n);
+ 
+        cin>>mod;
+ 
+        if(n<=k)
+        {
+            ll ans=0;
+ 
+            for(ll i=m-1;i<=n-1;i++)
+            {
+                ans=(ans+first[i])%mod;
+            }
+            cout<<ans<<endl;
+            continue;
+        }
+ 
+        matrix ans;
+ 
+        ans.null();
+ 
+        ans.mat[0][0]=1;
+ 
+        for(int i=1;i<=k;i++)
+        {
+            ans.mat[0][i]=second[i-1];
+            ans.mat[1][i]=second[i-1];
+        }
+ 
+        int st=2,st1=1;
+ 
+        for(int i=0;i<k-1;i++)
+        {
+            ans.mat[st++][st1++]=1;
+        }
+ 
+        ll last=0,f=0;
+ 
+        matrix ans1=mat_exp(n-k,ans);
+ 
+        last=(sum*ans1.mat[0][0])%mod;
+ 
+        for(ll i=1;i<=k;i++)
+        {
+            last=(last+first[k-i]*ans1.mat[0][i])%mod;
+            // cout<<ans1.mat[0][i]<<endl;
+        }
+ 
+        m--;
+ 
+        if(m<=k)
+        {
+            for(ll i=0;i<m;i++)
+            {
+                f=f+first[i];
+            }
+        }
+        else
+        {
+            matrix ans2=mat_exp(m-k,ans);
+ 
+            f=(sum*ans2.mat[0][0])%mod;
+ 
+            for(ll i=1;i<=k;i++)
+            {
+                f=(f+first[k-i]*ans2.mat[0][i])%mod;
+            }
+        }
+ 
+        cout<<((last-f)%mod+mod)%mod<<endl;
+    }
+} 
+
+

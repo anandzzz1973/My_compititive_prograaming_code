@@ -36,7 +36,7 @@ void dfs1(int node,int par)
 	
 	for(int i=1;i<=l;i++)
 	{
-		up[node][i]=up[up[node][i-1]][i-1]; //using 2^j=2^(j-1)+2^(j-1), up[node][i-1] being the 2^(i-1) parent of th current node
+		up[node][i]=up[up[node][i-1]][i-1]; 
 	}
 	
 	for(auto it:v[node])  //note: we can also write for(int it:v[node])
@@ -64,6 +64,7 @@ int lca(int u,int v)
 {
 	if(is_ancestor(u,v))
 	return u;
+
 	if(is_ancestor(v,u))
 	return v;
 	

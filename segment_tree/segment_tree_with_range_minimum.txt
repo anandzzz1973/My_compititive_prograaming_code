@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N=1e5+4;
+int arr[N];
+int segtree[4*N];
+void build(int node,int st,int end)
+{
+    if(st==end)
+    {
+        segtree[node]=arr[st];
+        return;
+    }
+    int mid=(st+end)/2;
+    
+    build(2*node,st,mid);
+    
+    build(2*node+1,mid+1,end);
+    
+   segtree[node]=min(segtree[2*node],segtree[2*node+1]);
+}
+void update(int node,int st,int end,int idx,int val)
+{
+    if(st==end)
+    {
+        segtree[node]=val;
+        return;       
+    }
+    int mid=(st+end)/2;
+    
+    if(idx<=mid)
+    update(2*node,st,mid,idx,val);
+    else
+    update(2*node+1,mid+1,end,idx,val);
+    
+    segtree[node]=min(segtree[2*node],segtree[2*node+1]);
+}
+int query(int node,int st,int end,int l,int r)
+{
+    if(st>r||end<l)
+    return INT_MAX;
+    
+    if(st>=l&&end<=r)
+    return segtree[node];
+    
+    int a1,b1,c1;
+    int mid=(st+end)/2;
+    a1 = query(2*node,st,mid,l,r);
+    b1 = query(2*node+1,mid+1,end,l,r);
+    
+    c1=min(a1,b1);
+    return c1;
+}
+int main(){
+    
+    int t,q;
+    scanf("%d %d",&t,&q);
+    
+    for(int i=1;i<=t;i++)
+    {
+        scanf("%d",&arr[i]);
+    }
+    
+    build(1,1,t);
+    
+    for(int i=0;i<q;i++)
+    {
+        char c;
+        cin>>c;
+        int a,b;
+        scanf("%d %d",&a,&b);
+        
+        if(c=='u')
+        update(1,1,t,a,b);
+        else if(c=='q')
+       { 
+           int hell=query(1,1,t,a,b);
+          cout<<hell<<endl;
+       }
+    }
+    
+}
